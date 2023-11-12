@@ -1,77 +1,67 @@
-//Listener al botón de busqueda
-document.querySelector(".search button").addEventListener("click", () => {
-    library.search();
-  });
-  
-  //Listener al presionar enter
-  document.querySelector(".search-bar").addEventListener("keyup", (event) =>{
-      if(event.key == "Enter"){
-          library.search();
-      }
-  });
-  
-  
-  
-  //Clase libreria
-  let library = {
-    apiKey: " ",
-    //https://openlibrary.org/isbn/9780140328721 "https://openlibrary.org/works/?q="
-    url: "https://openlibrary.org/isbn/?q=", // http://openlibrary.org/search.json?q=  "http://openlibrary.org/search.json?title="
-  
-    //Función de busqueda
-    search: function () {
-      const isbn = document.querySelector(".search-bar").value;
-      if (isbn) {
-        this.fetchLibrary(isbn);
-      } else {
-        alert("Por favor, ingrese nombre de Libro.");
-      }
-    },
-  
-    //Función de Fetch a la API
-    fetchLibrary: async function (isbn) {
-      try {
-        const response = await fetch(
-          //`${this.url}${city}&units=metric&appid=${this.apiKey}`
-          `${this.url}${isbn}`
-        );
-  
-        if (!response.ok) {
-          alert(`No se encontró el libro ${isbn}.`);
-          throw new Error(`No se encontró datos para el libro ${isbn}.`);
-        }
-  
-        const data = await response.json();
-        console.log(data);
-        
-        this.displayLibrary(data);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-  
-  
-    //Función de renderizado de datos
-    displayLibrary: function(data){
-      const {title} = data;
-      const {icon, description} = data.library[0];
-      const {temp, publish_date} = data.main;
-      const {number_of_pages} = data.number_of_pages;
-      
-      console.log(title, icon, description, temp, publish_date, number_of_pages);
-      //Manejo del DOM
-      //document.querySelector(".city").textContent = `Titulo: ${title}`;
-      document.querySelector(".temp").textContent = `${temp}°C`;
-      document.querySelector(".icon").src = `https://openweathermap.org/img/wn/${icon}.png`;
-      document.querySelector(".description").textContent = description;
-      document.querySelector(".publish_date").textContent = `Humedad al ${publish_date}%`;
-      document.querySelector(".number_of_pages").textContent = `Numero de Paginas: ${number_of_pages} km/h`;
-      /*document.body.style.backgroundImage = "url('https://source.unsplash.com/1600x900/?"+title+"')";*/
+// Obtén el formulario y el contenedor de resultados
+const searchForm = document.getElementById("search-form");
+const resultsContainer = document.getElementById("results-container");
 
-      //covers.openlibrary.org/b/id/12630813-M.jpg
-    }
-  };
-  
-  
-  //Inicializar siempre con el id OL45804W
-  library.fetchLibrary("OL45804W");
+// Escucha el evento de envío del formulario
+searchForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    // Obtén el valor de búsqueda del formulario
+    const searchTerm = document.getElementById("search-input").value;
+
+    // Limpia los resultados anteriores
+    resultsContainer.innerHTML = "";
+
+    // Realiza una solicitud a la API de Open Library
+    fetch(`https://openlibrary.org/search.json?q=${searchTerm}`)
+        .then(response => response.json())
+        .then(data => {
+            // Muestra los resultados en el contenedor
+            displayResults(data);
+        })
+        .catch(error => {
+            console.error("Error al obtener resultados:", error);
+        });
+});
+
+// URL de la imagen de reemplazo
+const placeholderImageURL = "PORTADA-NO-DISPONIBLE.jpg";
+
+// Función para mostrar los resultados en el contenedor
+function displayResults(data) {
+    const docs = data.docs;
+
+    docs.forEach(book => {
+        const bookResult = document.createElement("div");
+        bookResult.classList.add("book-result");
+
+        const img = document.createElement("img");
+        //img.src = libro.cover_i ? `http://covers.openlibrary.org/b/id/${libro.cover_i}-M.jpg` : placeholderImageURL;
+        img.src = `http://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`;        
+        img.alt = "Portada del libro";
+
+        
+        const bookInfo = document.createElement("div");
+        bookInfo.classList.add("book-info");
+
+        const h2 = document.createElement("h2");
+        h2.textContent = book.title;
+
+        
+
+        const autorP = document.createElement("p");
+        autorP.textContent = `Autor: ${book.author_name ? book.author_name.join(',') : 'Desconocido'}`;
+
+        const editorialP = document.createElement("p");
+        editorialP.textContent = `Editorial: ${book.publisher ? book.publisher[0] : 'Desconocido'}`;
+
+        bookInfo.appendChild(h2);
+        bookInfo.appendChild(autorP);
+        bookInfo.appendChild(editorialP);
+
+        bookResult.appendChild(img);
+        bookResult.appendChild(bookInfo);
+
+        resultsContainer.appendChild(bookResult);
+    });
+}

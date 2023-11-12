@@ -1,44 +1,45 @@
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>App de Biblioteca</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link rel="stylesheet" href="./style.css" />
-    <script src="./script.js" defer></script>
-  </head>
-  <body>
-    <!-- Carta del Libro -->
-    <div class="card">
-      <!-- Barra de Busqueda -->
-      <div class="search">
-        <input type="text" class="search-bar" placeholder="Ingrese ISBN Libro" />
-        <button>
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-      </div>
+<head>
+    <!-- Configuración del documento -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Enlace al archivo de estilos CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Título de la página -->
+    <title>Open Library</title>
+</head>
+<body>
 
-      <!-- Datos del Libro -->
-      <div class="library">
-        <h2 class="isbn">Titulo de Libro</h2>
-        <h1 class="authors">Autor</h1>
-        <div class="flex">
-          <img
-            src="https://covers.openlibrary.org/b/id/1-M.jpg"
-            alt="imagen de Portada"
-            class="icon"
-          />
-          <div class="description">Editorial</div>
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Título de la página -->
+        <h1>Buscador de Libros</h1>
+        <!-- Formulario de búsqueda -->
+        <form id="search-form">
+            <!-- Caja de texto para ingresar la búsqueda -->
+            <input type="text" id="search-input" placeholder="Buscar libros...">
+            <!-- Botón de búsqueda -->
+            <!--<button type="submit">Buscar<i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i></button> -->
+            <button type="submit">Buscar</button>
+        </form>
+        
+        <!-- Contenedor para mostrar los resultados -->
+        <div id="results-container">
+            <!-- Aquí se mostrarán los resultados -->
+            <div class="book-result">
+              <img src="PORTADA-NO-DISPONIBLE.jpg" alt="Portada del libro">
+              <div class="book-info">
+                  <h2>Nombre del Libro</h2>
+                  <p>Autor: Nombre del Autor</p>
+                  <p>Editorial: Nombre de la Editorial</p>
+                  
+              </div>
+              
+            </div>            
+
         </div>
-        <div class="publish_date">Fecha Publicacion</div>
-        <div class="number_of_pages">Numero de Paginas:</div>
-      </div>
     </div>
-  </body>
+    <script src="script.js"></script>
+</body>
 </html>
